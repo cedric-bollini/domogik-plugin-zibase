@@ -1,0 +1,306 @@
+{
+	"json_version": 2,
+    
+	"identity": {
+        "author": "Cedric BOLLINI", 
+        "author_email": "cb.dev at sfr.fr", 
+        "tags": ["zibase", "temperature", "humidity", "oregon", "lighting", "chacon", "dio"], 
+        "dependencies": [],
+        "description": "Zibase plugin", 
+        "domogik_min_version": "0.5.1", 
+        "name": "zibase", 
+        "type": "plugin", 
+        "version": "0.1"
+    },
+
+	"configuration": [
+		{
+			"name": "LAN IP Address",			
+			"key": "ip",
+			"description": "LAN IP Zibase",
+			"default": "127.0.0.1",
+			"type": "string",
+			"required": true
+		},
+		{
+			"name": "Interface",
+			"key": "interface",
+			"description": "Network interface used",
+			"default": "eth0",
+			"type": "string",
+			"required": true
+		},
+		{
+			"name": "Port",
+			"key": "port",
+			"description": "Listenning Port",
+			"default": "17100",
+			"type": "integer",
+			"required": true
+		},
+		{
+			"name": "Internal variables",
+			"key": "envar",
+			"description": "Enable reading internal variables",
+			"default": "False",
+			"type": "boolean",
+			"required": false
+		},
+		{
+			"name": "Interval",
+			"key": "interv",
+			"description": "Interval between each reading of the internal variables",
+			"default": "10",
+			"type": "integer",
+			"required": false
+		}
+	],
+    "products" : [],
+	"device_types": {
+		"zibase.switch": {
+			"description": "Any Lights, Any Plugs",
+			"id": "zibase.switch",
+			"name": "Lightning / Plug : Chacon, DIO, ...",
+			"commands": ["Switch"],
+			"sensors": ["Switch"],
+			"parameters": [
+				{
+					"key" : "device",
+					"xpl": true,
+					"description": "Device Address : Protocol, Example: A1:CHACON",
+					"type": "string"
+				}			
+			]
+		},
+		"zibase.temperature": {
+			"description": "Temperature sensors",
+			"id": "zibase.temperature",
+			"name": "Temperature sensors",
+			"commands": [],
+			"sensors": ["temperature"],
+			"parameters": [
+				{
+					"key" : "device",
+					"xpl": true,
+					"description": "Device Address  Example: OS123456",
+					"type": "string"
+				}			
+			]
+		},
+		"zibase.humidity": {
+			"description": "Humidity sensors",
+			"id": "zibase.humidity",
+			"name": "Humidity sensors",
+			"commands": [],
+			"sensors": ["humidity"],
+			"parameters": [
+				{
+					"key" : "device",
+					"xpl": true,
+					"description": "Device Address  Example: OS123456",
+					"type": "string"
+				}			
+			]
+		},
+		"zibase.temperature_humidity": {
+			"description": "Temperature / Humidity sensors",
+			"id": "zibase.temperature_humidity",
+			"name": "Temperature and Humidity sensors",
+			"commands": [],
+			"sensors": ["temperature", "humidity"],
+			"parameters": [
+				{
+					"key" : "device",
+					"xpl": true,
+					"description": "Device Address  Example: OS123456",
+					"type": "string"
+				}			
+			]
+		},
+		"zibase.internal_var": {
+			"description": "Internal Variable",
+			"id": "zibase.internal_var",
+			"name": "Internal Variable",
+			"commands": [],
+			"sensors": ["internal_var"],
+			"parameters": [
+				{
+					"key" : "device",
+					"xpl": true,
+					"description": "Variable Address  Example: VAR0, VAR1, VAR2, ... ",
+					"type": "string"
+				}			
+			]
+		}
+	},
+	"sensors": {
+        "Switch": {
+            "name": "Switch",
+            "incremental": false,
+            "data_type": "DT_Switch",
+            "conversion": "from_off_on_to_DT_Switch",
+            "timeout": 0,
+            "history": {
+                "store": true,
+                "duplicate": false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "temperature": {
+            "name": "Temperature",
+            "incremental" : false,
+            "data_type": "DT_Temp",
+            "conversion": "",
+            "timeout" : 600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "humidity": {
+            "name": "Humidity",
+            "incremental" : false,
+            "data_type": "DT_Humidity",
+            "conversion": "",
+            "timeout" : 600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+		},
+        "internal_var": {
+            "name": "internal_var",
+            "incremental" : false,
+            "data_type": "DT_Number",
+            "conversion": "",
+            "timeout" : 0,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+		}
+	},
+    "xpl_commands": {
+        "Switch": {
+            "name": "Switch",
+            "schema": "zibase.basic",
+            "xplstat_name": "Switch",
+            "parameters": {
+                "static": [
+                    {
+                        "key": "type",
+                        "value": "command"
+                    }
+                ],
+                "device": []
+            }
+        }
+	},
+    "commands": {
+        "Switch": {
+            "name": "Switch",
+            "return_confirmation": true,
+            "parameters": [
+                {
+                    "key": "command",
+                    "data_type": "DT_Switch",
+                    "conversion": "from_DT_Switch_to_off_on"
+                }
+            ],
+            "xpl_command": "Switch"
+        }
+	},
+   "xpl_stats": {
+        "Switch": {
+            "name": "Switch",
+            "schema": "zibase.basic",
+            "parameters": {
+                "static": [
+                    {
+                        "key": "type",
+                        "value": "command"
+                    }
+                ],
+                "device": [],
+                "dynamic": [
+                    {
+                        "key": "command",
+                        "ignore_values": "",
+                        "sensor": "Switch"
+                    }
+                ]
+            }
+        },
+       "temperature": {
+            "name": "Temperature",
+            "schema": "sensor.basic",
+            "parameters": {
+            	"static": [
+            		{
+            		    "key": "type",
+            		    "value": "temp"
+            		}
+            	],
+                "device": [],
+                "dynamic": [
+                	{
+                         "key": "current",
+                         "ignore_values": "",
+                         "sensor": "temperature"
+                    }
+                ]
+            }
+       },
+       "humidity": {
+            "name": "Humidity",
+            "schema": "sensor.basic",
+            "parameters": {
+ 				"static": [
+ 					{
+ 						"key": "type",
+ 						"value": "humidity"
+ 					}
+				],
+				"device": [],
+				"dynamic": [
+					{
+						"key": "current",
+						"ignore_values": "",
+						"sensor": "humidity"
+					}
+				]
+			}
+		},
+       "internal_var": {
+            "name": "Internal_var",
+            "schema": "sensor.basic",
+            "parameters": {
+ 				"static": [
+ 					{
+ 						"key": "type",
+ 						"value": "status"
+ 					}
+				],
+				"device": [],
+				"dynamic": [
+					{
+						"key": "current",
+						"ignore_values": "",
+						"sensor": "internal_var"
+					}
+				]
+			}
+		}
+	}		
+}
